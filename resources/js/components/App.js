@@ -1,6 +1,18 @@
 import React, { Component } from 'react';
 
 class App extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+        // bind
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        console.log('posted');
+    }
+
     render() {
         return (
             <div className="container">
@@ -9,7 +21,7 @@ class App extends Component {
                         <div className="card">
                             <div className="card-header">Tweet Something</div>
                             <div className="card-body">
-                                <form action="">
+                                <form onsubmit={this.handleSubmit()}>
                                     <div className="form-group">
                                     <textarea
                                         className="form-control"
