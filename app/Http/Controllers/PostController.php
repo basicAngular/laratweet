@@ -2,12 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function create(Request $request)
+    public function index(Request $request, post $post)
     {
-        return 'post will be created here and details goes here.';
+        $allPosts = $post->whereIn('user_id', $request->user()->following()->pluck('users.id')
+                ->push($request->user()->id))->with('user');
+        $posts = $allPosts->orderBy('created_at','desc')->take(10)->get();
+        return response()->json([
+            'posts' => $posts,
+        ]);
+    }
+    public function create(Request $request, post $post)
+    {
+        // created post
+        $createedPost = $request->user()->post()->create([
+            'body' => $request->body,
+        ]);
+        // return the response
+        return response()->json($post->with('user')->find($createedPost->id));
     }
 }

@@ -4,27 +4,72 @@ class App extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            body: ''
+            body: '',
+            posts: [],
+            loading: false
         };
         // bind
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.renderPosts = this.renderPosts.bind(this);
+        this.getPosts = this.getPosts.bind(this);
+    }
+
+    getPosts() {
+        this.setState({loading: true});
+        axios.get('/posts').then((response)=>
+                this.setState({
+                    postsData: console.log(response.data.posts),
+                    posts: [...response.data.posts],
+                    loading: false
+                })
+            )
+    }
+
+    componentWillMount() {
+        this.getPosts();
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        this.postData();
+        axios.post('/posts',{
+                body: this.state.body
+            })
+            .then(response=> {
+                this.setState({
+                    posts: [...this.state.posts, response.data]
+                })
+            })
+        //this.postData();
         console.log(this.state.body);
+        this.setState({ body: '' });
     }
 
     postData() {
         axios.post('/posts',{body: this.state.body});
     }
 
+
     handleChange(e) {
         this.setState({
             body: e.target.value
         });
+    }
+
+    renderPosts() {
+     return this.state.posts.map(post=>
+        <div key="{post.id}" className="media">
+            <div className="media-left">
+                <img src={post.user.avatar} className="media-object mr-2"/>
+            </div>
+            <div className="media-body">
+                <div className="user">
+                    <a href={`user/${post.user.username}`}> <b> {post.user.username} </b></a>
+                    {''} - {post.humanCreatedAt}
+                </div>
+                {post.body}
+            </div>
+        </div>)
     }
 
     render() {
@@ -39,6 +84,7 @@ class App extends Component {
                                     <div className="form-group">
                                     <textarea
                                         onChange = {this.handleChange}
+                                        value={this.state.body}
                                         className="form-control"
                                         name="" id=""
                                         rows="5"
@@ -53,10 +99,10 @@ class App extends Component {
                     </div>
                     <div className="col-md-6">
                         <div className="card">
-                            <div className="card-header">Example Component</div>
+                            <div className="card-header">Recent Tweet Details</div>
 
                             <div className="card-body">
-                                I'm an App component!
+                                {!this.state.loading ? this.renderPosts(): 'Loading...'}
                             </div>
                         </div>
                     </div>
