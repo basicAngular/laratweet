@@ -12,16 +12,15 @@ class App extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.renderPosts = this.renderPosts.bind(this);
-        this.getPosts = this.getPosts.bind(this);
+        //this.getPosts = this.getPosts.bind(this);
     }
 
     getPosts() {
-        this.setState({loading: true});
+        //this.setState({loading: true});
         axios.get('/posts').then((response)=>
                 this.setState({
-                    postsData: console.log(response.data.posts),
                     posts: [...response.data.posts],
-                    loading: false
+                    //loading: false
                 })
             )
     }
@@ -30,23 +29,31 @@ class App extends Component {
         this.getPosts();
     }
 
+
+    postData() {
+        axios.post('/posts',{body: this.state.body});
+    }
+
+    componentDidMount() {
+      this.interval =  setInterval(()=>this.getPosts(),1000)
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
     handleSubmit(e) {
         e.preventDefault();
         axios.post('/posts',{
-                body: this.state.body
-            })
+            body: this.state.body
+        })
             .then(response=> {
                 this.setState({
                     posts: [...this.state.posts, response.data]
                 })
             })
-        //this.postData();
-        console.log(this.state.body);
-        this.setState({ body: '' });
-    }
-
-    postData() {
-        axios.post('/posts',{body: this.state.body});
+        //console.log(this.state.body);
+        //this.setState({ body: '' });
     }
 
 
@@ -58,7 +65,7 @@ class App extends Component {
 
     renderPosts() {
      return this.state.posts.map(post=>
-        <div key="{post.id}" className="media">
+        <div className="media"> {/*key="{post.id}"*/}
             <div className="media-left">
                 <img src={post.user.avatar} className="media-object mr-2"/>
             </div>
