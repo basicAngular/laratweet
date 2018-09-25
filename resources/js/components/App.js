@@ -35,11 +35,14 @@ class App extends Component {
     }
 
     componentDidMount() {
-      this.interval =  setInterval(()=>this.getPosts(),1000)
+        Echo.private('new-post').listen('PostCreate',(e)=>{
+            console.log(e);
+        })
+      // this.interval =  setInterval(()=>this.getPosts(),1000)
     }
 
     componentWillUnmount() {
-        clearInterval(this.interval);
+        // clearInterval(this.interval);
     }
 
     handleSubmit(e) {

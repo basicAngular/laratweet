@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PostCreate;
 use App\post;
 use Illuminate\Http\Request;
 
@@ -22,6 +23,10 @@ class PostController extends Controller
         $createedPost = $request->user()->post()->create([
             'body' => $request->body,
         ]);
+
+        // broadcost message
+
+        broadcast(new PostCreate($createedPost, $request->user))->toOthers();
         // return the response
         return response()->json($post->with('user')->find($createedPost->id));
     }
