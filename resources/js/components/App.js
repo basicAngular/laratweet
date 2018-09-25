@@ -53,7 +53,7 @@ class App extends Component {
                 })
             })
         //console.log(this.state.body);
-        //this.setState({ body: '' });
+        this.setState({ body: '' });
     }
 
 
@@ -65,7 +65,7 @@ class App extends Component {
 
     renderPosts() {
      return this.state.posts.map(post=>
-        <div className="media"> {/*key="{post.id}"*/}
+        <div key={post.id} className="media">
             <div className="media-left">
                 <img src={post.user.avatar} className="media-object mr-2"/>
             </div>

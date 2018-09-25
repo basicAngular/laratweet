@@ -57221,7 +57221,7 @@ var App = function (_Component) {
                 });
             });
             //console.log(this.state.body);
-            //this.setState({ body: '' });
+            this.setState({ body: '' });
         }
     }, {
         key: 'handleChange',
@@ -57236,8 +57236,7 @@ var App = function (_Component) {
             return this.state.posts.map(function (post) {
                 return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
-                    { className: 'media' },
-                    ' ',
+                    { key: post.id, className: 'media' },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'div',
                         { className: 'media-left' },
